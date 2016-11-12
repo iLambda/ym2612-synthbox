@@ -21,12 +21,13 @@ const char chr_oneandhalf[] = {17,18,20,10,21,1,2,7};
 const char chr_separator[] = {0,0,3,31,3,0,0,0};
 const char chr_selector[] = {0,4,6,31,6,4,0,0};
 const char chr_epsilon[] = {0,0,14,16,12,17,14,0};
+const char chr_plusorminus[] = {4,4,31,4,4,0,31,0};
 
 unsigned char i = 0;
 unsigned char j = 0;
 unsigned char dirty = 0;
 unsigned char depth = 0;
-char valuestr[5];
+char valuestr[16];
 ym2612menuitem_t* rendered = 0;
 
 
@@ -64,6 +65,10 @@ int main(void) {
   // Adding custom character epsilon
   Lcd_Cmd(88);
   for (i = 0; i<=7; i++) Lcd_Chr_CP(chr_epsilon[i]);
+  Lcd_Cmd(_LCD_RETURN_HOME);
+  // Adding custom character +or-
+  Lcd_Cmd(96);
+  for (i = 0; i<=7; i++) Lcd_Chr_CP(chr_plusorminus[i]);
   Lcd_Cmd(_LCD_RETURN_HOME);
 
   // Load menu from memory
