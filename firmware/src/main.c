@@ -1,6 +1,8 @@
 #include "menu.h"
 #include "menuitems.h"
 
+#define DISPLAY_DEPTH 1
+
 sbit LCD_EN at RB2_bit;
 sbit LCD_RS at RB3_bit;
 sbit LCD_D4 at RB4_bit;
@@ -15,8 +17,18 @@ sbit LCD_D5_Direction at TRISB5_bit;
 sbit LCD_D6_Direction at TRISB6_bit;
 sbit LCD_D7_Direction at TRISB7_bit;
 
+const char chr_oneandhalf[] = {17,18,20,10,21,1,2,7};
+const char chr_separator[] = {0,0,3,31,3,0,0,0};
+const char chr_selector[] = {0,4,6,31,6,4,0,0};
+const char chr_epsilon[] = {0,0,14,16,12,17,14,0};
+
+unsigned char i = 0;
+unsigned char j = 0;
 unsigned char dirty = 0;
-char out[] = "aaaaaaaa";
+unsigned char depth = 0;
+char valuestr[5];
+ym2612menuitem_t* rendered = 0;
+
 
 int main(void) {
   // All input digital
@@ -37,6 +49,22 @@ int main(void) {
   Lcd_Cmd(_LCD_CLEAR);
   // Cursor off
   Lcd_Cmd(_LCD_CURSOR_OFF);
+  // Adding custom character selector
+  Lcd_Cmd(64);
+  for (i = 0; i<=7; i++) Lcd_Chr_CP(chr_selector[i]);
+  Lcd_Cmd(_LCD_RETURN_HOME);
+  // Adding custom character 1/2
+  Lcd_Cmd(72);
+  for (i = 0; i<=7; i++) Lcd_Chr_CP(chr_oneandhalf[i]);
+  Lcd_Cmd(_LCD_RETURN_HOME);
+  // Adding custom character separator
+  Lcd_Cmd(80);
+  for (i = 0; i<=7; i++) Lcd_Chr_CP(chr_separator[i]);
+  Lcd_Cmd(_LCD_RETURN_HOME);
+  // Adding custom character epsilon
+  Lcd_Cmd(88);
+  for (i = 0; i<=7; i++) Lcd_Chr_CP(chr_epsilon[i]);
+  Lcd_Cmd(_LCD_RETURN_HOME);
 
   // Load menu from memory
   menu_load();
@@ -52,13 +80,34 @@ int main(void) {
     if (dirty) {
       // Cursor off
       Lcd_Cmd(_LCD_CLEAR);
-      // Draw text
-      Lcd_Chr(1, 1, 0x7E);
-      Lcd_Out(1, 2, menu_current()->text);
-      // Draw next if exists
-      if (menu_next()) {
-        Lcd_Out(2, 1, menu_next()->text);
+      // Compute depth
+      depth = 2;//DISPLAY_DEPTH ? menu_depth() : 0;
+      // Draw items on screen
+      i = 0, rendered = menu_current();
+      while (rendered && i < 2) {
+        // Draw text
+        Lcd_Out(1+i, depth + 1 + ((!i?1:0) * (!depth)), rendered->text);
+        // Draw value
+        if (rendered->display) {
+          // Value to str
+          rendered->display(rendered->value, valuestr);
+          // Draw
+          Lcd_Out(1+i, 17 - strlen(valuestr), valuestr);
+        }
+        // Render depth
+        if (DISPLAY_DEPTH) {
+          j = 1;
+          while (j <= depth) {
+            Lcd_Chr(1+i, j, 0x02);
+            j++;
+          }
+        }
+        // Render next
+        rendered = rendered->nextSibling;
+        i++;
       }
+      // Draw arrow
+      Lcd_Chr(1, !depth + depth, 0);
       // Undirty, redraw done
       dirty = 0;
     }

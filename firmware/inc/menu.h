@@ -8,6 +8,7 @@ void menu_current_value(char* out);
 
 ym2612menuitem_t* menu_root();
 ym2612menuitem_t* menu_current();
+unsigned char menu_depth();
 
 ym2612menuitem_t* menu_next();
 ym2612menuitem_t* menu_previous();
