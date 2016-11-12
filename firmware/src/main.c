@@ -86,7 +86,7 @@ int main(void) {
       // Cursor off
       Lcd_Cmd(_LCD_CLEAR);
       // Compute depth
-      depth = 2;//DISPLAY_DEPTH ? menu_depth() : 0;
+      depth = DISPLAY_DEPTH ? menu_depth() : 0;
       // Draw items on screen
       i = 0, rendered = menu_current();
       while (rendered && i < 2) {
