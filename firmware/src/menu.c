@@ -18,11 +18,14 @@ unsigned char menu_depth() {
   unsigned char i = 0;
   ym2612menuitem_t* itr = 0;
   itr = menu_mcurrent;
-  while(itr->parent) {
+  while (itr) {
+    while (itr->prevSibling) {
+      itr = itr->prevSibling;
+    }
     itr = itr->parent;
     i++;
   }
-  return i;
+  return i-1;
 }
 
 void menu_current_value(char* out) {

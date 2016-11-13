@@ -1,24 +1,5 @@
 #include "menuitem.h"
 
-void menuitem_makechild(ym2612menuitem_t* parent, ym2612menuitem_t* child) {
-  // Check if kid
-  if (parent->child) {
-    menuitem_makesibling(parent->child, child);
-  } else {
-    parent->child = child;
-    child->parent = parent;
-  }
-}
-
-void menuitem_makesibling(ym2612menuitem_t* base, ym2612menuitem_t* sibling) {
-  // Search last sibling
-  while (base->nextSibling) { base = base->nextSibling; }
-  // Bind
-  base->nextSibling = sibling;
-  sibling->prevSibling = base;
-}
-
-
 unsigned char menuitem_range_detune(unsigned char value) {
   if (value >= 128) {
     return value <= 0xFD ? 0xFD : value;
@@ -29,6 +10,14 @@ unsigned char menuitem_range_detune(unsigned char value) {
 
 unsigned char menuitem_range_2(unsigned char value) {
   return value % 2;
+}
+
+unsigned char menuitem_range_4(unsigned char value) {
+  return value % 4;
+}
+
+unsigned char menuitem_range_6(unsigned char value) {
+  return value % 4;
 }
 
 unsigned char menuitem_range_8(unsigned char value) {
@@ -80,7 +69,7 @@ void menuitem_display_bool(unsigned char value, char* out) {
 
 void menuitem_display_ams(unsigned char value, char* out) {
   switch (value) {
-    case 0: strcpy(out, "0"); break;
+    case 0: strcpy(out, "0 dB"); break;
     case 1: strcpy(out, "1.4/dB"); break;
     case 2: strcpy(out, "5.9/dB"); break;
     case 3: strcpy(out, "11.8/dB"); break;
@@ -131,4 +120,8 @@ void menuitem_display_algo(unsigned char value, char* out) {
     case 6: strcpy(out, "(1>2)34>"); break;
     case 7: strcpy(out, "1234>"); break;
   }
+}
+
+void menuitem_display_byteplusone(unsigned char value, char* out) {
+  ByteToStr(value+1, out);
 }

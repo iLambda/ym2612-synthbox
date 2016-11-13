@@ -23,13 +23,18 @@ const char chr_selector[] = {0,4,6,31,6,4,0,0};
 const char chr_epsilon[] = {0,0,14,16,12,17,14,0};
 const char chr_plusorminus[] = {4,4,31,4,4,0,31,0};
 
+char valuestr[16];
 unsigned char i = 0;
 unsigned char j = 0;
 unsigned char dirty = 0;
 unsigned char depth = 0;
-char valuestr[16];
 ym2612menuitem_t* rendered = 0;
 
+unsigned char input = 1;
+unsigned char oldinputstate = 0x00;
+unsigned char inputstate = 0x00;
+
+unsigned char midimap[6] = {1, 1, 1, 1, 1, 1};
 
 int main(void) {
   // All input digital
@@ -40,9 +45,12 @@ int main(void) {
   SPPCON = 0;
   UCON = 0;
   UCFG = 0x08;
-  // Set all PORTB as outputs and reset
-  TRISB = 0x00;
-  PORTB = 0x02;
+  // Setting up I/O
+  TRISB = 0x03;
+  TRISC = 0xB0;
+  // Reset I/O
+  PORTB = 0x00;
+  PORTC = 0x00;
 
   // Init LCD library
   Lcd_Init();
@@ -74,13 +82,68 @@ int main(void) {
   // Load menu from memory
   menu_load();
   // Init menu
-  menu_init(&item_ch1);
+  menu_init(&item_lfo);
 
   // First draw
   dirty = 1;
 
   // Program loop
   while(1) {
+    // If input is allowed
+    if (input) {
+      // save inputstate
+      oldinputstate = inputstate;
+      /* construct inputstate
+          B0-1 is scroll rotary encoder
+          B2-3 is value rotary encoder
+          B4 is fwd button
+          B5 is bck button
+      */
+      inputstate = (PORTB & 0x03) | ((PORTC & 0x30) >> 2) | ((PORTC & 0x80) >> 3);
+      // check for scrolling
+      if (!(inputstate & 0x01) && (oldinputstate & 0x01)) {
+        // scroll
+        if (!(inputstate & 0x02)) {
+          // up
+          menu_goprevious();
+        } else {
+          // down
+          menu_gonext();
+        }
+        // redraw needed
+        dirty = 1;
+      }
+
+      // check for value editing
+      if (!(inputstate & 0x04) && (oldinputstate & 0x04)) {
+        // edit current value
+        rendered = menu_current();
+        // if value can be edited
+        if (rendered->compute) {
+          rendered->value = rendered->compute(rendered->value + (inputstate & 0x08 ? -1 : 1));
+          // redraw needed
+          dirty = 1;
+        }
+      }
+
+      // check for forward btn pressed
+      if ((inputstate & 0x10) && !(oldinputstate & 0x10)) {
+        // if we're on chan selection, load channel
+        if (menu_current() == &item_ch) {
+          menu_loadchannel();
+        }
+        // if we're on op selection, load operator
+        if (menu_current() == &item_ch_op) {
+          menu_loadoperator();
+        }
+
+        // go fwd
+        menu_goforward();
+        // redraw needed
+        dirty = 1;
+      }
+    }
+
     // If redraw is needed
     if (dirty) {
       // Cursor off
@@ -102,9 +165,8 @@ int main(void) {
         // Render depth
         if (DISPLAY_DEPTH) {
           j = 1;
-          while (j <= depth) {
+          while (j++ <= depth) {
             Lcd_Chr(1+i, j, 0x02);
-            j++;
           }
         }
         // Render next
@@ -116,7 +178,6 @@ int main(void) {
       // Undirty, redraw done
       dirty = 0;
     }
-
   }
 
   // Return
