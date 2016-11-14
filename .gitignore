@@ -8,3 +8,5 @@ firmware/build/
 firmware/dist/
 firmware.old/
 Makefile-genesis.properties
+mockups/
+
