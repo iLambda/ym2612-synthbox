@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "../inc/menu.h"
 
 #ifndef NULL
 #define NULL ((void*)0)
@@ -14,8 +14,8 @@ void menu_init(ym2612menuitem_t* proot) {
   menu_mcurrent = menu_mroot;
 }
 
-unsigned char menu_depth() {
-  unsigned char i = 0;
+uint8_t menu_depth() {
+  uint8_t i = 0;
   ym2612menuitem_t* itr = 0;
   itr = menu_mcurrent;
   while (itr) {
@@ -28,11 +28,6 @@ unsigned char menu_depth() {
   return i-1;
 }
 
-void menu_current_value(char* out) {
-  IntToStr(menu_mcurrent->value, out);
-}
-
-
 ym2612menuitem_t* menu_next() {
   return menu_mcurrent->nextSibling;
 }
@@ -42,7 +37,9 @@ ym2612menuitem_t* menu_previous() {
 }
 
 ym2612menuitem_t* menu_back() {
-  return menu_mcurrent->parent;
+  ym2612menuitem_t* tmp = menu_mcurrent;
+  while(tmp->prevSibling) { tmp = tmp->prevSibling; }
+  return tmp->parent;
 }
 
 ym2612menuitem_t* menu_forward() {
@@ -65,8 +62,10 @@ ym2612menuitem_t* menu_goprevious() {
 }
 
 ym2612menuitem_t* menu_goback() {
-  if (menu_mcurrent->parent) {
-    return menu_mcurrent = menu_mcurrent->parent;
+  ym2612menuitem_t* tmp = menu_mcurrent;
+  while(tmp->prevSibling) { tmp = tmp->prevSibling; }
+  if (tmp->parent) {
+    return menu_mcurrent = tmp->parent;
   }
   return NULL;
 }

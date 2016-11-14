@@ -2,3 +2,9 @@
 *.cp
 *.mcl
 *.asm
+*.mk
+*.bash
+firmware/build/
+firmware/dist/
+firmware.old/
+Makefile-genesis.properties

@@ -1,14 +1,19 @@
 #ifndef YM2612_SYNTHBOX_MENU_H
 #define YM2612_SYNTHBOX_MENU_H
 
-#include "menuitem.h"
+#include <xc.h>
+
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "../inc/menuitem.h"
 
 void menu_init(ym2612menuitem_t* pRoot);
-void menu_current_value(char* out);
+void menu_current_value(uint8_t* out);
 
 ym2612menuitem_t* menu_root();
 ym2612menuitem_t* menu_current();
-unsigned char menu_depth();
+uint8_t menu_depth();
 
 ym2612menuitem_t* menu_next();
 ym2612menuitem_t* menu_previous();

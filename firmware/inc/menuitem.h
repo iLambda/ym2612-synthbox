@@ -1,12 +1,20 @@
 #ifndef YM2612_SYNTHBOX_MENUITEM_H
 #define YM2612_SYNTHBOX_MENUITEM_H
 
-typedef struct ym2612menuitem{
-  char* text;
-  unsigned char value;
+#include <xc.h>
 
-  unsigned char (*compute)(unsigned char);
-  void (*display)(unsigned char, char*);
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct ym2612menuitem{
+  const uint8_t* text;
+  uint8_t value;
+  uint8_t modulus;
+  
+  void (*display)(uint8_t, uint8_t*);
+  void (*gonefwd)(void);
+  void (*frombwd)(void);
 
   struct ym2612menuitem* child;
   struct ym2612menuitem* parent;
@@ -14,25 +22,15 @@ typedef struct ym2612menuitem{
   struct ym2612menuitem* prevSibling;
 } ym2612menuitem_t;
 
-unsigned char menuitem_range_2(unsigned char value);
-unsigned char menuitem_range_4(unsigned char value);
-unsigned char menuitem_range_6(unsigned char value);
-unsigned char menuitem_range_8(unsigned char value);
-unsigned char menuitem_range_16(unsigned char value);
-unsigned char menuitem_range_32(unsigned char value);
-unsigned char menuitem_range_64(unsigned char value);
-unsigned char menuitem_range_128(unsigned char value);
-unsigned char menuitem_range_detune(unsigned char value);
-unsigned char menuitem_range_lfo(unsigned char value);
-
-void menuitem_display_algo(unsigned char value, char* out);
-void menuitem_display_ams(unsigned char value, char* out);
-void menuitem_display_fms(unsigned char value, char* out);
-void menuitem_display_bool(unsigned char value, char* out);
-void menuitem_display_detune(unsigned char value, char* out);
-void menuitem_display_lfo(unsigned char value, char* out);
-void menuitem_display_mul(unsigned char value, char* out);
-void menuitem_display_rs(unsigned char value, char* out);
-void menuitem_display_byteplusone(unsigned char value, char* out);
+void menuitem_display_algo(uint8_t value, uint8_t* out);
+void menuitem_display_ams(uint8_t value, uint8_t* out);
+void menuitem_display_fms(uint8_t value, uint8_t* out);
+void menuitem_display_bool(uint8_t value, uint8_t* out);
+void menuitem_display_detune(uint8_t value, uint8_t* out);
+void menuitem_display_lfo(uint8_t value, uint8_t* out);
+void menuitem_display_mul(uint8_t value, uint8_t* out);
+void menuitem_display_rs(uint8_t value, uint8_t* out);
+void menuitem_display_byteplusone(uint8_t value, uint8_t* out);
+void menuitem_display_byte(uint8_t value, uint8_t* out);
 
 #endif
