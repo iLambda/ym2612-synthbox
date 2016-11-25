@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane prefHeight="619.0" prefWidth="517.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.ilambda.projects.ym2612.synthbox.uart.view.UARTMainViewController">
+   <children>
+      <BorderPane prefHeight="500.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <MenuBar prefHeight="25.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="Device">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Select COM Port..." />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Set baud rate" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Read">
+                     <items>
+                    <MenuItem mnemonicParsing="false" text="Export instrument as .y12" />
+                        <MenuItem mnemonicParsing="false" text="Export instrument as .vgi" />
+                     </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Write">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Import .y12 instrument" />
+                      <MenuItem mnemonicParsing="false" text="Import .vgi instrument" />
+                     </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <bottom>
+            <StackPane prefHeight="30.0" BorderPane.alignment="CENTER">
+               <children>
+                  <TextField fx:id="commandField" prefHeight="25.0" prefWidth="246.0">
+                     <StackPane.margin>
+                        <Insets right="60.0" />
+                     </StackPane.margin>
+                  </TextField>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="56.0" text="Send" StackPane.alignment="CENTER_RIGHT" />
+               </children>
+               <padding>
+                  <Insets left="3.0" right="3.0" />
+               </padding>
+            </StackPane>
+         </bottom>
+         <center>
+            <TextArea fx:id="console" editable="false" style="-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-highlight-fill: null; -fx-highlight-text-fill: null;" BorderPane.alignment="CENTER">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </TextArea>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
