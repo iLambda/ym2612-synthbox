@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="101.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.ilambda.projects.ym2612.synthbox.uart.view.UARTPortViewController">
+<AnchorPane prefHeight="101.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.ilambda.projects.ym2612.synthbox.uart.view.UARTPortViewController">
    <children>
       <BorderPane prefHeight="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
@@ -27,7 +27,7 @@
                      <children>
                         <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="332.0" GridPane.columnIndex="1">
                            <children>
-                              <Button cancelButton="true" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="60.0" text="OK">
+                              <Button fx:id="okButton" cancelButton="true" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="60.0" text="OK">
                                  <HBox.margin>
                                     <Insets right="8.0" />
                                  </HBox.margin>

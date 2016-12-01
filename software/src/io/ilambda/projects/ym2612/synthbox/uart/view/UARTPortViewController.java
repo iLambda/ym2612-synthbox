@@ -11,6 +11,8 @@ public class UARTPortViewController {
 	
 	@FXML
 	private ComboBox<String> comComboBox;
+	@FXML
+	private Button okButton;
 	
 	private UARTMainViewController parent;
 	
@@ -22,6 +24,19 @@ public class UARTPortViewController {
     private void initialize() {
     	// set ports list
     	comComboBox.setItems(FXCollections.observableArrayList(SerialPortList.getPortNames()));
+    	// if no com port detected
+    	if (comComboBox.getItems().size() <= 0) {
+    		// disable
+    		comComboBox.setDisable(true);
+    		// alert
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error!");
+			alert.setHeaderText("No COM port has been detected.");
+			alert.setContentText("The software didn't detect any COM port on your device.\nIf you indeed have COM ports, try restarting your machine.");
+			alert.showAndWait();
+			// set button text to exit	
+			okButton.setText("Exit");
+    	}
     }
     
     /**
@@ -42,9 +57,11 @@ public class UARTPortViewController {
 				alert.showAndWait();
 			}
     	}
-    	// set port
-    	UARTMainViewController.usedPort.set(new SerialPort(comComboBox.getValue()));
-    	parent.updatePort();
+    	// set port if there is ports
+    	if (comComboBox.getItems().size() > 0) {
+        	UARTMainViewController.usedPort.set(new SerialPort(comComboBox.getValue()));
+        	parent.updatePort();
+    	}
     }
 
     
@@ -52,12 +69,16 @@ public class UARTPortViewController {
      * Close the selection
      */
     public void close() {
-    	// set port
-    	if (parent.isAutoconnecting()) {
-    		parent.listenPort();
-    	} else {
-    		parent.enableManualConnection();
-    	}
+    	// if ports
+    	if (comComboBox.getItems().size() > 0) {
+        	// set port
+        	if (parent.isAutoconnecting()) {
+        		parent.listenPort();
+        	} else {
+        		parent.enableManualConnection();
+        	}  		
+    	}   	
+
     	// close
     	((Stage)comComboBox.getScene().getWindow()).close();
     }
