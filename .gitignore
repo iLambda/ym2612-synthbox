@@ -10,3 +10,7 @@ firmware.old/
 Makefile-genesis.properties
 mockups/
 
+# Eclipse
+#.classpath
+#.project
+.settings/
